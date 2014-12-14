@@ -17,4 +17,5 @@ def replace from_string, to_string, file
   puts "Modify: #{file}"
   puts "sed -i.bak s/#{from_string}/#{to_string}/g #{file}"
   `sed -i.bak "s/#{from_string}/#{to_string}/g" "#{file}"`  
+  `rm "#{file}.bak"`
 end
