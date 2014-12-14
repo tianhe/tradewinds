@@ -1,12 +1,10 @@
 == README
 
-Sample Rails App with Mongo, Devise, Facebook Authentication in API form.
+Sample App with Rails 4.1.6, Mongoid 4, Devise 3.4, and Facebook Authentication in API form.
 
-
-This README would normally document whatever steps are necessary to get the
-application up and running.
-
-Things you may want to cover:
+1. git clone
+2. Copy config/mongoid.yml.example, and rename with appropriate database
+3. `rake rename_app[old_name,new_name]`
 
 * Ruby version: 2.1.3
 
@@ -23,13 +21,3 @@ Install MongoDB
 
 * Services (job queues, cache servers, search engines, etc.)
 
-* Deployment instructions
-
-* ...
-
-
-Please feel free to use a different markup language if you do not plan to run
-<tt>rake doc:app</tt>.
-
-1. Copy config/mongoid.yml.example, and rename with appropriate database
-2. `rake rename_app[old_name, new_name]`
