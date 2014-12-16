@@ -8,7 +8,7 @@ class V1::UsersController < V1::ApiController
 
   def update
     @success = @user.update(user_params)
-    @success ? render_200 : render_400(['save failed']) 
+    @success ? render_200 : render_error(400, ['save failed']) 
   end
 
 private
@@ -26,7 +26,7 @@ private
     begin 
       @user = User.find(params[:id])
     rescue
-      render_400(['record not found'])
+      render_error(401, ['unknown user'])
     end
   end
 end

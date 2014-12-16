@@ -28,15 +28,17 @@ private
 
       user
     rescue FbGraph::InvalidToken => e
-      render_401(['unauthorized fb access']) and return
+      render_error(401, ['unauthorized fb access']) and return
     end
   end
 
   def user_login
-    user = User.where(email: authentication_params[:email]).first
+    unless (user = User.where(email: authentication_params[:email]).first)
+      render_error(401, ['unauthorized access']) and return
+    end
 
-    unless user && user.valid_password?(authentication_params[:password])
-      render_401(['unauthorized access']) and return
+    unless (user.valid_password?(authentication_params[:password]))
+      render_error(401, ['unauthorized access']) and return
     end
 
     user

@@ -10,20 +10,19 @@ describe V1::AuthenticationsController do
     context 'email and password' do
       it 'creates an authentication_token response if the email and password is valid' do
         post :create, user: { email: user.email, password: 'hello123' }
-        json = JSON.parse(response.body)
-        expect(json).to be == { user: { id: user.id.to_s, email: user.email, authentication_token: user.authentication_token } }.with_indifferent_access
+        
+        expect(response.body).to be == { user: { id: user.id.to_s, email: user.email, authentication_token: user.authentication_token } }.to_json
       end
 
       it 'returns 401 if the password is invalid' do
         post :create, user: { email: user.email, password: 'hello' }
-        json = JSON.parse(response.body)
-        expect(json).to be == { status: 401, error: ['unauthorized access'] }.with_indifferent_access
+        
+        expect(response.body).to be == { status: 401, error: ['unauthorized access'] }.to_json
       end
 
-      it 'returns 401 if the email or password isnt present' do
+      it 'returns 404 if the email or password isnt present' do
         post :create, user: { password: 'hello123' }
-        json = JSON.parse(response.body)
-        expect(json).to be == { status: 401, error: ['unauthorized access'] }.with_indifferent_access
+        expect(response.body).to be == { status: 401, error: ['unauthorized access'] }.to_json
       end
     end
 
@@ -39,8 +38,7 @@ describe V1::AuthenticationsController do
           post :create, user: { fb_access_token: 'validtoken' }
         }.to change{ User.count }.by(0)
 
-        json = JSON.parse(response.body)
-        expect(json).to be == { user: { id: authentication.user.id.to_s, email: authentication.user.email, authentication_token: authentication.user.authentication_token } }.with_indifferent_access
+        expect(response.body).to be == { user: { id: authentication.user.id.to_s, email: authentication.user.email, authentication_token: authentication.user.authentication_token } }.to_json
 
       end
 
@@ -62,17 +60,14 @@ describe V1::AuthenticationsController do
 
         user = User.find_by(email: email)
 
-        json = JSON.parse(response.body)
-        expect(json).to be == { user: { id: user.id.to_s, email: user.email, authentication_token: user.authentication_token } }.with_indifferent_access        
+        expect(response.body).to be == { user: { id: user.id.to_s, email: user.email, authentication_token: user.authentication_token } }.to_json        
       end
 
       it 'returns 401 if the access_token is invalid' do
         post :create, user: { fb_access_token: 'hello123' }
 
-        json = JSON.parse(response.body)
-        expect(json).to be == { status: 401, error: ['unauthorized fb access'] }.with_indifferent_access
+        expect(response.body).to be == { status: 401, error: ['unauthorized fb access'] }.to_json
       end
     end
   end
-
 end

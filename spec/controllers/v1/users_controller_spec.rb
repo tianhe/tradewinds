@@ -33,14 +33,13 @@ describe V1::UsersController do
 
   describe "GET 'show'" do
     it "returns http success" do
-      get :show, id: user.id, email: user.email, authentication_token: user.authentication_token
-      json = JSON.parse(response.body)
-      expect(json).to be == { id: user.id.to_s, email: user.email }.with_indifferent_access
+      get :show, id: user.id, email: user.email, authentication_token: user.authentication_token      
+      expect(response.body).to be == { id: user.id.to_s, email: user.email }.to_json
     end
 
-    it "returns 400 if the id doesnt exist" do
+    it "returns 404 if the id doesnt exist" do
       get :show, id: 0, email: user.email, authentication_token: user.authentication_token
-      expect(response.code).to be == '400'
+      expect(response.code).to be == '401'
     end
   end
 
@@ -52,9 +51,9 @@ describe V1::UsersController do
       expect(User.first.email).to be == 'testtest@gmail.com'
     end
 
-    it "returns 400 if the id doesnt exist" do
+    it "returns 404 if the id doesnt exist" do
       put :update, id: 0, user: { eamil: 'testtest@gmail.com' }, email: user.email, authentication_token: user.authentication_token
-      expect(response.code).to be == '400'
+      expect(response.code).to be == '401'
     end    
   end
 end
