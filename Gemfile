@@ -3,18 +3,28 @@ source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.1.6'
+
+#mongo
 gem 'mongoid'
 gem 'bson_ext'
+
+#front-end
+gem 'haml-rails'
 gem 'sass-rails', '~> 4.0.3'
 gem 'uglifier', '>= 1.3.0'
 gem 'coffee-rails', '~> 4.0.0'
 gem 'jquery-rails'
 gem 'jbuilder', '~> 2.0'
 gem 'turbolinks'
+
+#core
 gem 'sdoc', '~> 0.4.0',          group: :doc
 gem 'unicorn'
+
+#social
 gem 'devise'
 gem 'fb_graph'
+
 # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
 gem 'spring',        group: :development
 
