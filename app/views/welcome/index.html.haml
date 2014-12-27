@@ -1,0 +1,9 @@
+#main-container.container
+  .row
+    %h1.logo
+      Sample Company Name
+    %h3.slogan
+      Sample Slogan
+    .login-signup
+      = link_to('Login', new_user_session_path, class: 'btn btn-success btn-lg')
+      = link_to('Signup', new_user_registration_path, class: 'btn btn-success btn-lg')
