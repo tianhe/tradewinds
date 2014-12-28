@@ -3,11 +3,11 @@ class V1::ApiController < ApplicationController
   before_filter :authenticate_user_from_token!
 
   def authenticate_user_from_token!
-    unless @user = User.where(email: params[:email]).first
+    unless @current_user = User.where(email: params[:email]).first
       render_error(401, ['unknown user']) and return
     end
 
-    unless Devise.secure_compare(@user.authentication_token, params[:authentication_token])
+    unless Devise.secure_compare(@current_user.authentication_token, params[:authentication_token])
       render_error(401, ['unauthorized access']) and return
     end
   end

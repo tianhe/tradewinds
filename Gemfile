@@ -26,6 +26,8 @@ gem 'unicorn'
 #social
 gem 'devise'
 gem 'fb_graph'
+gem 'omniauth'
+gem 'omniauth-facebook'
 
 # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
 gem 'spring',        group: :development
@@ -45,4 +47,5 @@ group :development, :test do
   gem "capybara"
   gem 'shoulda-matchers'
   gem 'database_cleaner'
+  gem 'dotenv-rails'
 end
