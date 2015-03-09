@@ -8,6 +8,7 @@ gem 'rails', '4.2.0'
 gem 'mongoid-tree'
 gem 'mongoid'
 gem 'bson_ext'
+gem 'rails_admin_settings'
 
 #front-end
 gem 'haml-rails'
@@ -52,5 +53,4 @@ group :development, :test do
   gem 'shoulda-matchers'
   gem 'database_cleaner'
   gem 'dotenv-rails'
-  gem 'webmock'
 end

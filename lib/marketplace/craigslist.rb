@@ -1,22 +1,50 @@
 class Marketplace::Craigslist
-  def initialize url='http://newyork.craigslist.org/search/sss?excats=20-74-82-14&sort=date&minAsk=100&query=iphone+5+16gb'
+  def initialize url='http://newyork.craigslist.org/search/sss?excats=20-74-82-14&minAsk=100&query=iphone%205%2016gb&sort=date&format=rss'
     @url = url
   end
 
-  def update
+  def fetch_listings
     @rss = SimpleRSS.parse open(@url)
   end
 
   def populate_listings
-    @rss.items.each do |listing|      
-      # Listing.create(
-      #   listing.url 
-      #   listing.description
-      #   listing.dc_title
-      #   listing.dc_date
-      # )
+    @rss.items.each do |listing|
+      binding.pry
+      listing_price = Marketplace::Craigslist.listing_price(listing)
+      transaction_price = Marketplace::Craigslist.transaction_price(listing)
+      list_time = Marketplace::Craigslist.list_time(listing)
+      link = Marketplace::Craigslist.link(listing)
+      description = Marketplace::Craigslist.description(listing)
+      title = Marketplace::Craigslist.title(listing)
+      condition = Marketplace::Craigslist.condition(listing)
+
+      brand = Marketplace::Craigslist.brand(listing)
+      model = Marketplace::Craigslist.model(listing)
+      capacity = Marketplace::Craigslist.capacity(listing)
+      color = Marketplace::Craigslist.color(listing)
+
+      carrier = Marketplace::Craigslist.carrier(listing)
+      unlocked = Marketplace::Craigslist.unlocked(listing)
+      specs = Marketplace::Craigslist.specs(listing)
+
+      product = Product.where(brand: brand, model: model, capacity: capacity, color: color, carrier: carrier, specs: specs, unlocked: unlocked).first_or_create
+      source = Source.where(name: 'craigslist').first_or_create
+
+      Listing.create(
+        listing_price: listing_price,
+        transaction_price: transaction_price,
+        list_time: list_time,
+        url: link,
+        condition: condition,
+        description: description,
+        title: title,
+        product_id: product.id,
+        location_id: nil,
+        source_id: source.id
+      )
     end
   end
+
 
   class << self
     def listing_price listing
@@ -27,7 +55,7 @@ class Marketplace::Craigslist
     end
 
     def list_time listing
-      DateTime.parse(listing.dc_date) if listing.dc_date
+      listing.dc_date
     end
 
     def link listing
@@ -110,7 +138,6 @@ class Marketplace::Craigslist
       models = {"iphone5s" => "iphone5s",
         "iphone5c" => "iphone5c",
         'iphone6\+' => "iphone6plus",
-        "iphone6plus" => "iphone6plus",
         "iphone6plus" => "iphone6plus",
         "iphone6" => "iphone6",      
         "iphone5" => "iphone5"

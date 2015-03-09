@@ -25,7 +25,7 @@ RSpec.describe Marketplace::Craigslist do
 
   describe '#list_date' do
     it 'should return correct datetime given an item with dc_date 2015-03-07T16:35:21-05:00' do
-      attrs = {dc_date: '2015-03-07T16:35:21-05:00'}
+      attrs = {dc_date: DateTime.parse('2015-03-07T16:35:21-05:00')}
       item = OpenStruct.new attrs
       expect(Marketplace::Craigslist.list_time item).to eq(DateTime.parse('2015-03-07T16:35:21-05:00'))
     end
