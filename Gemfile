@@ -9,8 +9,8 @@ gem 'mongoid-tree'
 gem 'mongoid'
 gem 'bson_ext'
 
-gem 'rails_admin'
-gem 'rails_admin_settings'
+#gem 'rails_admin'
+#gem 'rails_admin_settings'
 
 #front-end
 gem 'haml-rails'
