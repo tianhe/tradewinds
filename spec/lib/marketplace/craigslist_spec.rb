@@ -182,10 +182,6 @@ RSpec.describe Marketplace::Craigslist do
     end
   end
 
-  describe '#model' do
-    '5 5S 5C 6 6Plus'
-  end
-
   describe '#carrier' do
     carriers = {"sprint" => "sprint",
      "at&t" => "att",
@@ -230,6 +226,28 @@ RSpec.describe Marketplace::Craigslist do
       attrs = {description: " LOCK "}
       item = OpenStruct.new attrs
       expect(Marketplace::Craigslist.unlocked item).to eq(nil)
+    end
+  end
+
+  describe '#model' do
+    models = {"iPhone 5" => "iphone5",
+      "iPhone 5S" => "iphone5s",
+      "iPhone 5 S" => "iphone5s",
+      "iPhone 5C" => "iphone5c",
+      "iPhone 5 C" => "iphone5c",
+      "iPhone 6" => "iphone6",      
+      "iPhone 6+" => "iphone6plus", 
+      "iPhone 6Plus" => "iphone6plus",
+      "iPhone 6 Plus" => "iphone6plus",
+      "iPhone 6+ (6 Plus)" => "iphone6plus"
+    }
+    
+    models.each do |model|
+      it "should return #{model[1]} when #{model[0]} is in title" do
+        attrs = {title: " #{model[0].capitalize} "}
+        item = OpenStruct.new attrs
+        expect(Marketplace::Craigslist.model item).to eq(model[1])
+      end      
     end
   end
 

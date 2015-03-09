@@ -62,10 +62,6 @@ class Marketplace::Craigslist
       end
     end
 
-    def model listing
-
-    end
-
     def brand listing
       'Apple'
     end
@@ -104,13 +100,40 @@ class Marketplace::Craigslist
       return nil
     end
 
-    def capacity listing
-    end
-
     def unlocked listing
       if listing.title.try(:match, /unlock/i) || listing.description.try(:match, /unlock/i)
         true
       end
+    end
+
+    def model listing
+      models = {"iphone5s" => "iphone5s",
+        "iphone5c" => "iphone5c",
+        'iphone6\+' => "iphone6plus",
+        "iphone6plus" => "iphone6plus",
+        "iphone6plus" => "iphone6plus",
+        "iphone6" => "iphone6",      
+        "iphone5" => "iphone5"
+      }
+
+      if listing.title
+        title = listing.title.gsub(/ |\(|\)/,'').downcase
+        
+        models.each do |m|
+          return m[1] if title.match(m[0])
+        end
+      end
+
+      if listing.description
+        description = listing.description.gsub(/ |\(|\)/,'').downcase
+        
+        models.each do |m|
+          return m[1] if description.match(m[0])
+        end
+      end
+    end
+
+    def capacity listing
     end
 
     def specs listing
