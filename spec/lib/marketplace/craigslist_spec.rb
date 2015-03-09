@@ -80,91 +80,160 @@ RSpec.describe Marketplace::Craigslist do
   end
 
   describe '#condition' do
-    it 'should return Brand New for certain conditions' do
-      conditions = {"Brand New" => 'brand new'} 
-      conditions.each do |condition|
-        attrs = {title: condition[0]}
+    context '#title' do
+      it 'should return Brand New for certain conditions' do
+        conditions = {"Brand New" => 'brand new'} 
+        conditions.each do |condition|
+          attrs = {title: condition[0]}
+          item = OpenStruct.new attrs
+          expect(Marketplace::Craigslist.condition item).to eq(condition[1])
+        end
+      end
+
+      it 'should return Mint for certain conditions' do
+        conditions = {"MINT iPhone 5" => "mint",
+          "Mint Condition" => 'mint',
+          "MINT Condition" => 'mint',
+          " - Mint " => 'mint'
+        }
+
+        conditions.each do |condition|
+          attrs = {title: condition[0]}
+          item = OpenStruct.new attrs
+          expect(Marketplace::Craigslist.condition item).to eq(condition[1])
+        end
+      end
+
+      it 'should return New for certain conditions' do
+        conditions = {"New iPhone 5" => 'new'}
+
+        conditions.each do |condition|
+          attrs = {title: condition[0]}
+          item = OpenStruct.new attrs
+          expect(Marketplace::Craigslist.condition item).to eq(condition[1])
+        end
+      end
+
+      it 'should return Like New for certain conditions' do
+        conditions = {"*Like New*" => 'like new'}
+
+        conditions.each do |condition|
+          attrs = {title: condition[0]}
+          item = OpenStruct.new attrs
+          expect(Marketplace::Craigslist.condition item).to eq(condition[1])
+        end
+      end
+
+      it 'should return Good for certain conditions' do
+        conditions = { "good condition" => 'good',
+          "Good condition" => 'good'
+        }
+
+        conditions.each do |condition|
+          attrs = {title: condition[0]}
+          item = OpenStruct.new attrs
+          expect(Marketplace::Craigslist.condition item).to eq(condition[1])
+        end      
+      end
+
+      it 'should return Great for certain conditions' do
+        conditions = { "Great Condition" => 'great'}
+
+        conditions.each do |condition|
+          attrs = {title: condition[0]}
+          item = OpenStruct.new attrs
+          expect(Marketplace::Craigslist.condition item).to eq(condition[1])
+        end      
+      end
+
+      it 'should return nil given an item without title' do
+        attrs = {title: "MINTY FRESH"}
         item = OpenStruct.new attrs
-        expect(Marketplace::Craigslist.condition item).to eq(condition[1])
+        expect(Marketplace::Craigslist.condition item).to eq(nil)
       end
     end
 
-    it 'should return Mint for certain conditions' do
-      conditions = {"MINT iPhone 5" => "mint",
-        "Mint Condition" => 'mint',
-        "MINT Condition" => 'mint',
-        " - Mint " => 'mint'
-      }
-
-      conditions.each do |condition|
-        attrs = {title: condition[0]}
-        item = OpenStruct.new attrs
-        expect(Marketplace::Craigslist.condition item).to eq(condition[1])
-      end
-    end
-
-    it 'should return New for certain conditions' do
-      conditions = {"New iPhone 5" => 'new'}
-
-      conditions.each do |condition|
-        attrs = {title: condition[0]}
-        item = OpenStruct.new attrs
-        expect(Marketplace::Craigslist.condition item).to eq(condition[1])
-      end
-    end
-
-    it 'should return Like New for certain conditions' do
-      conditions = {"*Like New*" => 'like new'}
-
-      conditions.each do |condition|
-        attrs = {title: condition[0]}
-        item = OpenStruct.new attrs
-        expect(Marketplace::Craigslist.condition item).to eq(condition[1])
-      end
-    end
-
-    it 'should return Good for certain conditions' do
-      conditions = { "good condition" => 'good',
-        "Good condition" => 'good'
-      }
-
-      conditions.each do |condition|
-        attrs = {title: condition[0]}
-        item = OpenStruct.new attrs
-        expect(Marketplace::Craigslist.condition item).to eq(condition[1])
-      end      
-    end
-
-    it 'should return Great for certain conditions' do
-      conditions = { "Great Condition" => 'great'}
-
-      conditions.each do |condition|
-        attrs = {title: condition[0]}
-        item = OpenStruct.new attrs
-        expect(Marketplace::Craigslist.condition item).to eq(condition[1])
-      end      
-    end
-
-    it 'should return nil given an item without title' do
-      attrs = {title: "MINTY FRESH"}
-      item = OpenStruct.new attrs
-      expect(Marketplace::Craigslist.condition item).to eq(nil)
+    context 'body' do
     end
   end
 
   describe '#color' do
-    %w(white black gold blue yellow pink green gray silver)
+    %w(white black gold blue yellow pink green gray silver).each do |color|
+      it "should return #{color} when color is in title" do
+        attrs = {title: " #{color.capitalize} "}
+        item = OpenStruct.new attrs
+        expect(Marketplace::Craigslist.color item).to eq(color)
+      end
+    end
+
+    %w(white black gold blue yellow pink green gray silver).each do |color|
+      it "should return #{color} when color is in body" do
+        attrs = {description: " #{color.capitalize} "}
+        item = OpenStruct.new attrs
+        expect(Marketplace::Craigslist.color item).to eq(color)
+      end
+    end
   end
 
-  describe 'brand' do
-    'apple'
+  describe '#brand' do
+    it 'should return Apple given an item without title' do
+      item = {}
+      expect(Marketplace::Craigslist.brand item).to eq('Apple')
+    end
   end
 
-  describe 'model' do
+  describe '#model' do
     '5 5S 5C 6 6Plus'
   end
 
-  describe 'carrier' do
-    %w(sprint at&t sprint verizon unlocked)
+  describe '#carrier' do
+    carriers = {"sprint" => "sprint",
+     "at&t" => "att",
+     "verizon" => "verizon",
+     "t-mobile" => "tmobile" }
+
+    context 'title' do
+      carriers.each do |carrier|
+        it "should return #{carrier[1]} when carrier is in title" do
+          attrs = {title: " #{carrier[0].capitalize} "}
+          item = OpenStruct.new attrs
+          expect(Marketplace::Craigslist.carrier item).to eq(carrier[1])
+        end
+      end
+    end
+
+    context 'description' do
+      carriers.each do |carrier|
+        it "should return #{carrier[1]} when carrier is in descriptioon" do
+          attrs = {description: " #{carrier[0].capitalize} "}
+          item = OpenStruct.new attrs
+          expect(Marketplace::Craigslist.carrier item).to eq(carrier[1])
+        end
+      end
+    end
+  end
+
+  describe 'unlocked' do
+    it "should return true when unlock is in title" do
+      attrs = {title: " UNLOCKED "}
+      item = OpenStruct.new attrs
+      expect(Marketplace::Craigslist.unlocked item).to eq(true)
+    end
+
+    it "should return true when unlock is in descriptioon" do
+      attrs = {description: " UNLOCK "}
+      item = OpenStruct.new attrs
+      expect(Marketplace::Craigslist.unlocked item).to eq(true)
+    end
+    
+    it "should return nil otherwise" do
+      attrs = {description: " LOCK "}
+      item = OpenStruct.new attrs
+      expect(Marketplace::Craigslist.unlocked item).to eq(nil)
+    end
+  end
+
+  describe 'capacity' do
+    %w(sprint att sprint verizon tmobile)
   end
 end

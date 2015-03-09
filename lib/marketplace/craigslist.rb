@@ -63,18 +63,54 @@ class Marketplace::Craigslist
     end
 
     def model listing
+
     end
 
     def brand listing
+      'Apple'
+    end
+
+    def color listing
+      if listing.title.present?
+        %w(white black gold blue yellow pink green gray silver).each do |c|
+          return c if listing.title.match(/#{c}/i)
+        end
+      end
+
+      if listing.description.present?
+        %w(white black gold blue yellow pink green gray silver).each do |c|
+          return c if listing.description.match(/#{c}/i)
+        end
+      end
+      return nil
+    end
+
+    def carrier listing      
+      carriers = %w(att sprint verizon tmobile)
+
+      if listing.title.present?
+        title = listing.title.gsub(/\&|\-/, '')
+        carriers.each do |c|
+          return c if title.match(/#{c}/i)
+        end
+      end
+
+      if listing.description.present?
+        description = listing.description.gsub(/\&|\-/, '')
+        carriers.each do |c|
+          return c if description.match(/#{c}/i)
+        end
+      end
+      return nil
     end
 
     def capacity listing
     end
 
-    def color listing
-    end
-
-    def carrier listing
+    def unlocked listing
+      if listing.title.try(:match, /unlock/i) || listing.description.try(:match, /unlock/i)
+        true
+      end
     end
 
     def specs listing
