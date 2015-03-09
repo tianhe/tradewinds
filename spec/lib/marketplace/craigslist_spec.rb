@@ -252,6 +252,18 @@ RSpec.describe Marketplace::Craigslist do
   end
 
   describe 'capacity' do
-    %w(sprint att sprint verizon tmobile)
+    capacities = {'8gb' => '8gb',
+      '16 GB' => '16gb',
+      '32 gb' => '32gb',
+      '64gb' => '64gb',
+      '128gb' => '128gb'}
+
+    capacities.each do |capacity|
+      it "should return #{capacity[1]} when #{capacity[0]} is in title" do
+        attrs = {title: " #{capacity[0].capitalize} "}
+        item = OpenStruct.new attrs
+        expect(Marketplace::Craigslist.capacity item).to eq(capacity[1])
+      end      
+    end
   end
 end

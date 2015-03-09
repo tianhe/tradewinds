@@ -134,6 +134,29 @@ class Marketplace::Craigslist
     end
 
     def capacity listing
+      capacities = {
+        '128gb' => '128gb',
+        '16gb' => '16gb',
+        '32gb' => '32gb',
+        '64gb' => '64gb',
+        '8gb' => '8gb'
+      }
+
+      if listing.title
+        title = listing.title.gsub(/ |\(|\)/,'').downcase
+        
+        capacities.each do |c|
+          return c[1] if title.match(c[0])
+        end
+      end
+
+      if listing.description
+        description = listing.description.gsub(/ |\(|\)/,'').downcase
+        
+        capacities.each do |c|
+          return c[1] if description.match(c[0])
+        end
+      end
     end
 
     def specs listing
