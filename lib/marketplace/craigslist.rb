@@ -1,10 +1,16 @@
 class Marketplace::Craigslist
   def initialize url='http://newyork.craigslist.org/search/sss?excats=20-74-82-14&minAsk=100&query=iphone%205%2016gb&sort=date&format=rss'
+    if url.match(/newyork/) 
+      @location = 'newyork'
+    elsif url.match(/sanfrancisco/) 
+      @location = 'sanfrancisco'
+    end
+
     @url = url
   end
 
   def fetch_listings
-    @rss = SimpleRSS.parse open(@url)
+    @rss = SimpleRSS.parse open(@url, proxy: 'http://12.145.20.25:80')
   end
 
   def populate_listings
@@ -29,7 +35,7 @@ class Marketplace::Craigslist
 
       product = Product.where(brand: brand, model: model, capacity: capacity, color: color, carrier: carrier, specs: specs, unlocked: unlocked).first_or_create
       source = Source.where(name: 'craigslist').first_or_create
-
+      location = Location.where()
       Listing.create(
         listing_price: listing_price,
         transaction_price: transaction_price,

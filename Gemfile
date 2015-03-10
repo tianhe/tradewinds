@@ -25,6 +25,7 @@ gem 'turbolinks'
 
 #web
 gem 'simple-rss'
+gem 'proxy_manager'
 
 #core
 gem 'sdoc', '~> 0.4.0',          group: :doc
@@ -51,7 +52,6 @@ group :development, :test do
   gem 'faker'
   gem 'pry'
   gem 'pry-remote'
-  gem "capybara"
   gem 'shoulda-matchers'
   gem 'database_cleaner'
   gem 'dotenv-rails'
