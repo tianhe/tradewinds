@@ -2,15 +2,15 @@ class Marketplace::Craigslist
   def initialize url='http://newyork.craigslist.org/search/sss?excats=20-74-82-14&minAsk=100&query=iphone%205%2016gb&sort=date&format=rss'
     if url.match(/newyork/) 
       @location = 'newyork'
-    elsif url.match(/sanfrancisco/) 
-      @location = 'sanfrancisco'
+    elsif url.match(/sfbay/) 
+      @location = 'sfbay'
     end
 
     @url = url
   end
 
   def fetch_listings
-    @rss = SimpleRSS.parse open(@url, proxy: 'http://12.145.20.25:80')
+    @rss = SimpleRSS.parse open(@url, proxy: 'http://107.152.101.74:80')
   end
 
   def populate_listings
@@ -53,6 +53,10 @@ class Marketplace::Craigslist
 
 
   class << self
+    def parse_location url
+      url.split(".")[0].gsub('http://','')
+    end
+
     def listing_price listing
       listing.title.scan(/&#x0024;(.*)/).first.try(:first)
     end

@@ -1,6 +1,11 @@
 require 'rails_helper'
 
 RSpec.describe Marketplace::Craigslist do
+  describe '#parse_location' do
+    it 'should locate url of the city' do
+      expect(Marketplace::Craigslist.parse_location 'http://newyork.craigslist.org/search/sss?excats=20-74-82-14&minAsk=100&query=iphone%206%20&sort=date&format=rss').to eq('newyork')
+    end
+  end
   describe '#get_listing_price' do
     it 'should return 240 given an item with title with &#x0024; appended to it' do
       attrs = {title: "MINT iPhone 5 16GB (Sheepshead Bay) &#x0024;240"}
