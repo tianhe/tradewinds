@@ -4,6 +4,8 @@ task :update_pricing_from_craigslist => :environment do
   urls = %w(
     http://newyork.craigslist.org/search/sss?excats=20-74-82-14&minAsk=100&query=iphone%205%20&sort=date&format=rss
     http://newyork.craigslist.org/search/sss?excats=20-74-82-14&minAsk=100&query=iphone%206%20&sort=date&format=rss
+    http://sfbay.craigslist.org/search/sss?excats=20-74-82-14&minAsk=100&query=iphone%205%20&sort=date&format=rss
+    http://sfbay.craigslist.org/search/sss?excats=20-74-82-14&minAsk=100&query=iphone%206%20&sort=date&format=rss
   )
   
   urls.each do |url|

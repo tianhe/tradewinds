@@ -102,8 +102,6 @@ GEM
       html2haml (>= 1.0.1)
       railties (>= 4.0.1)
     hashie (3.4.0)
-    hidemyass (0.0.9)
-      nokogiri
     hike (1.2.3)
     html2haml (2.0.0)
       erubis (~> 2.7.0)
@@ -304,7 +302,6 @@ DEPENDENCIES
   fb_graph
   fuubar
   haml-rails
-  hidemyass
   jbuilder
   jquery-rails
   mongoid

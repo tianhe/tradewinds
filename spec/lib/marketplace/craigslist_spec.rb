@@ -1,19 +1,19 @@
 require 'rails_helper'
 
 RSpec.describe Marketplace::Craigslist do
-  describe '#parse_city' do
+  describe '#city' do
     it 'should locate url of the city' do
-      expect(Marketplace::Craigslist.parse_city 'http://newyork.craigslist.org/search/sss?excats=20-74-82-14&minAsk=100&query=iphone%206%20&sort=date&format=rss').to eq('newyork')
+      expect(Marketplace::Craigslist.city 'http://newyork.craigslist.org/search/sss?excats=20-74-82-14&minAsk=100&query=iphone%206%20&sort=date&format=rss').to eq('newyork')
     end
   end
 
-  describe '#parse_neighborhood' do
+  describe '#neighborhood' do
     it 'should locate url of the neighborhood' do
-      expect(Marketplace::Craigslist.parse_neighborhood 'http://newyork.craigslist.org/search/mnh/sss?excats=20-74-82-14&minAsk=100&query=iphone%206%20&sort=date&format=rss').to eq('mnh')
+      expect(Marketplace::Craigslist.neighborhood 'http://newyork.craigslist.org/search/mnh/sss?excats=20-74-82-14&minAsk=100&query=iphone%206%20&sort=date&format=rss').to eq('mnh')
     end
 
     it 'should return nil if the neighborhood doesnt exist' do
-      expect(Marketplace::Craigslist.parse_neighborhood 'http://newyork.craigslist.org/search/sss?excats=20-74-82-14&minAsk=100&query=iphone%206%20&sort=date&format=rss').to eq(nil)
+      expect(Marketplace::Craigslist.neighborhood 'http://newyork.craigslist.org/search/sss?excats=20-74-82-14&minAsk=100&query=iphone%206%20&sort=date&format=rss').to eq(nil)
     end
   end
 
