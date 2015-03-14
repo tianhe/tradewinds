@@ -1,16 +1,13 @@
 class Marketplace::Craigslist
   def initialize url='http://newyork.craigslist.org/search/sss?excats=20-74-82-14&minAsk=100&query=iphone%205%2016gb&sort=date&format=rss'
-    if url.match(/newyork/) 
-      @location = 'newyork'
-    elsif url.match(/sfbay/) 
-      @location = 'sfbay'
-    end
-
     @url = url
   end
 
   def fetch_listings
-    @rss = SimpleRSS.parse open(@url, proxy: 'http://107.152.101.74:80')
+    proxies = HideMyAss::ProxyList.new.fetch
+    request = HideMyAss::Request.new(proxies)
+    response = request.run('http://newyork.craigslist.org/search/sss?excats=20-74-82-14&minAsk=100&query=iphone%205%2016gb&sort=date&format=rss')
+    @rss = SimpleRSS.parse response.response_body
   end
 
   def populate_listings
@@ -35,7 +32,9 @@ class Marketplace::Craigslist
 
       product = Product.where(brand: brand, model: model, capacity: capacity, color: color, carrier: carrier, specs: specs, unlocked: unlocked).first_or_create
       source = Source.where(name: 'craigslist').first_or_create
-      location = Location.where()
+      city = Marketplace::Craigslist.parse_city(url)
+      neighborhood = Marketplace::Craigslist.parse_neighborhood(url)
+
       Listing.create(
         listing_price: listing_price,
         transaction_price: transaction_price,
@@ -45,7 +44,8 @@ class Marketplace::Craigslist
         description: description,
         title: title,
         product_id: product.id,
-        location_id: nil,
+        city: city,
+        neighborhood: neighborhood,
         source_id: source.id
       )
     end
@@ -53,8 +53,15 @@ class Marketplace::Craigslist
 
 
   class << self
-    def parse_location url
+    def parse_city url
       url.split(".")[0].gsub('http://','')
+    end
+
+    def parse_neighborhood url
+      parts = url.split("/")
+      if parts.length > 5
+        return parts[4]
+      end
     end
 
     def listing_price listing

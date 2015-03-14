@@ -26,6 +26,8 @@ gem 'turbolinks'
 #web
 gem 'simple-rss'
 gem 'proxy_manager'
+gem 'typhoeus'
+gem 'hidemyass'
 
 #core
 gem 'sdoc', '~> 0.4.0',          group: :doc
