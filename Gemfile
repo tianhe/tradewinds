@@ -8,6 +8,7 @@ gem 'rails', '4.2.0'
 gem 'mongoid-tree'
 gem 'mongoid'
 gem 'bson_ext'
+gem 'mongoid_to_csv'
 
 #gem 'rails_admin'
 #gem 'rails_admin_settings'

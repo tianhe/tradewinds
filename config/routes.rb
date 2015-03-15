@@ -12,6 +12,10 @@ Rails.application.routes.draw do
     resources :authentications, only: [:create]
   end
 
+  scope module: :web do
+    resources :listings
+    resources :products
+  end
   # You can have the root of your site routed with "root"
   root 'welcome#index'
 

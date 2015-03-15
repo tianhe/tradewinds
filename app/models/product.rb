@@ -12,4 +12,5 @@ class Product
   validates :brand, :model, :capacity, :color, presence: true
 
   has_many :listings
+
 end
