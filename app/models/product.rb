@@ -8,7 +8,7 @@ class Product
   field :specs, type: String
   field :capacity, type: String
   field :unlocked, type: Boolean
-
+  
   validates :brand, :model, :capacity, :color, presence: true
 
   has_many :listings
