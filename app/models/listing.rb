@@ -11,9 +11,19 @@ class Listing
   field :city, type: String
   field :neighborhood, type: String
   field :verified, type: Boolean, default: false
-  
+
+  # belongs_to :product
+  field :brand, type: String
+  field :model, type: String
+  field :color, type: String
+  field :carrier, type: String
+  field :specs, type: String
+  field :capacity, type: String
+  field :unlocked, type: Boolean
+
+  # belongs_to :source
+  field :source, type: Boolean
+    
   validates :url, presence: true, uniqueness: true  
 
-  belongs_to :product
-  belongs_to :source
 end

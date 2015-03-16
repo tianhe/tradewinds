@@ -14,7 +14,6 @@ Rails.application.routes.draw do
 
   scope module: :web do
     resources :listings
-    resources :products
   end
   # You can have the root of your site routed with "root"
   root 'welcome#index'
