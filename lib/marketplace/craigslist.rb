@@ -28,9 +28,7 @@ class Marketplace::Craigslist
       carrier = Marketplace::Craigslist.carrier(listing)
       unlocked = Marketplace::Craigslist.unlocked(listing)
       specs = Marketplace::Craigslist.specs(listing)
-
-      product = Product.where(brand: brand, model: model, capacity: capacity, color: color, carrier: carrier, specs: specs, unlocked: unlocked).first_or_create
-      source = Source.where(name: 'craigslist').first_or_create
+      
       city = Marketplace::Craigslist.city(listing.link)
       neighborhood = Marketplace::Craigslist.neighborhood(listing.link)
 
@@ -42,10 +40,16 @@ class Marketplace::Craigslist
         condition: condition,
         description: description,
         title: title,
-        product_id: product.id,
+        brand: brand, 
+        model: model, 
+        capacity: capacity, 
+        color: color, 
+        carrier: carrier, 
+        specs: specs, 
+        unlocked: unlocked,
         city: city,
         neighborhood: neighborhood,
-        source_id: source.id
+        source: 'craigslist'
       )
     end
   end
