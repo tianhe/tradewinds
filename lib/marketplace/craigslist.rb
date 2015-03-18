@@ -12,7 +12,9 @@ class Marketplace::Craigslist
 
   def populate_listings
     @rss.items.each do |listing|
-      listing_price = Marketplace::Craigslist.listing_price(listing)
+      listing_price = Marketplace::Craigslist.listing_price(listing)      
+      next if listing_price > 1000
+
       transaction_price = Marketplace::Craigslist.transaction_price(listing)
       list_time = Marketplace::Craigslist.list_time(listing)
       link = Marketplace::Craigslist.link(listing)
