@@ -178,6 +178,8 @@ class Marketplace::Craigslist
           return m[1] if description.match(m[0])
         end
       end
+
+      nil
     end
 
     def capacity listing
@@ -204,6 +206,8 @@ class Marketplace::Craigslist
           return c[1] if description.match(c[0])
         end
       end
+
+      nil
     end
 
     def specs listing

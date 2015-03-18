@@ -189,6 +189,13 @@ RSpec.describe Marketplace::Craigslist do
         expect(Marketplace::Craigslist.color item).to eq(color)
       end
     end
+
+    it "should return nil otherwise" do
+      attrs = {description: " LOCK "}
+      item = OpenStruct.new attrs
+      expect(Marketplace::Craigslist.color item).to eq(nil)
+    end
+
   end
 
   describe '#brand' do
@@ -223,6 +230,13 @@ RSpec.describe Marketplace::Craigslist do
         end
       end
     end
+
+    it "should return nil otherwise" do
+      attrs = {description: " LOCK "}
+      item = OpenStruct.new attrs
+      expect(Marketplace::Craigslist.carrier item).to eq(nil)
+    end
+
   end
 
   describe 'unlocked' do
@@ -239,7 +253,7 @@ RSpec.describe Marketplace::Craigslist do
     end
     
     it "should return nil otherwise" do
-      attrs = {description: " LOCK "}
+      attrs = {description: " L "}
       item = OpenStruct.new attrs
       expect(Marketplace::Craigslist.unlocked item).to eq(nil)
     end
@@ -265,6 +279,12 @@ RSpec.describe Marketplace::Craigslist do
         expect(Marketplace::Craigslist.model item).to eq(model[1])
       end      
     end
+
+    it "should return nil otherwise" do
+      attrs = {description: " LOCK "}
+      item = OpenStruct.new attrs
+      expect(Marketplace::Craigslist.model item).to eq(nil)
+    end    
   end
 
   describe 'capacity' do
@@ -281,5 +301,11 @@ RSpec.describe Marketplace::Craigslist do
         expect(Marketplace::Craigslist.capacity item).to eq(capacity[1])
       end      
     end
+
+    it "should return nil otherwise" do
+      attrs = {description: " LOCK "}
+      item = OpenStruct.new attrs
+      expect(Marketplace::Craigslist.capacity item).to eq(nil)
+    end    
   end
 end
