@@ -13,6 +13,7 @@ class Marketplace::Craigslist
   def populate_listings
     @rss.items.each do |listing|
       listing_price = Marketplace::Craigslist.listing_price(listing)      
+      
       next if listing_price > 1000
 
       transaction_price = Marketplace::Craigslist.transaction_price(listing)
@@ -20,14 +21,14 @@ class Marketplace::Craigslist
       link = Marketplace::Craigslist.link(listing)
       description = Marketplace::Craigslist.description(listing)
       title = Marketplace::Craigslist.title(listing)
-      condition = Marketplace::Craigslist.condition(listing)
+      condition = Marketplace::Craigslist.condition(listing.title) || Marketplace::Craigslist.condition(listing.description)
 
       brand = Marketplace::Craigslist.brand(listing)
       model = Marketplace::Craigslist.model(listing)
       capacity = Marketplace::Craigslist.capacity(listing)
       color = Marketplace::Craigslist.color(listing)
 
-      carrier = Marketplace::Craigslist.carrier(listing)
+      carrier = Marketplace::Craigslist.carrier(listing.title) || Marketplace::Craigslist.carrier(listing.description)
       unlocked = Marketplace::Craigslist.unlocked(listing)
       specs = Marketplace::Craigslist.specs(listing)
       
@@ -92,21 +93,29 @@ class Marketplace::Craigslist
       listing.title
     end
 
-    def condition listing
-      title = listing.title.gsub(/\*/, '')
+    def cracked_screen phrase
+      phrase.match(/cracked screen/i)
+    end
 
-      if title.match(/brand new/i)
+    def condition phrase
+      phrase = phrase.gsub(/\*/, '')
+
+      if phrase.match(/brand new/i)
         'brand new'
-      elsif title.match(/ mint /i) || title.match(/^mint /i)
+      elsif phrase.match(/ mint /i) || phrase.match(/^mint /i) 
         'mint'
-      elsif title.match(/like new/i)
+      elsif phrase.match(/like new/i) 
         'like new'
-      elsif title.match(/ good /i) || title.match(/^good /i) 
+      elsif phrase.match(/ perfect /i) || phrase.match(/^perfect /i) 
+        'perfect'
+      elsif phrase.match(/ good /i) || phrase.match(/^good /i) 
         'good'
-      elsif title.match(/ great /i) || title.match(/^great /i) 
+      elsif phrase.match(/ great /i) || phrase.match(/^great /i) 
         'great'
-      elsif title.match(/ new /i) ||  title.match(/^new /i)
+      elsif phrase.match(/ new /i) || phrase.match(/^new /i)
         'new'
+      elsif phrase.match(/ excellent /i)
+        'excellent'
       else
         nil
       end
@@ -124,29 +133,24 @@ class Marketplace::Craigslist
       end
 
       if listing.description.present?
-        %w(white black gold blue yellow pink green gray silver).each do |c|
+        %w(white black gold blue yellow pink green gray grey silver).each do |c|
+          c = 'gray' if c == 'grey'
           return c if listing.description.match(/#{c}/i)
         end
       end
       return nil
     end
 
-    def carrier listing      
+    def carrier phrase
       carriers = %w(att sprint verizon tmobile)
 
-      if listing.title.present?
-        title = listing.title.gsub(/\&|\-/, '')
+      if phrase.present?
+        phrase = phrase.gsub(/\&amp;|\&|\-/, '')
         carriers.each do |c|
-          return c if title.match(/#{c}/i)
+          return c if phrase.match(/#{c}/i)
         end
       end
 
-      if listing.description.present?
-        description = listing.description.gsub(/\&|\-/, '')
-        carriers.each do |c|
-          return c if description.match(/#{c}/i)
-        end
-      end
       return nil
     end
 

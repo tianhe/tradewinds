@@ -100,9 +100,7 @@ RSpec.describe Marketplace::Craigslist do
       it 'should return Brand New for certain conditions' do
         conditions = {"Brand New" => 'brand new'} 
         conditions.each do |condition|
-          attrs = {title: condition[0]}
-          item = OpenStruct.new attrs
-          expect(Marketplace::Craigslist.condition item).to eq(condition[1])
+          expect(Marketplace::Craigslist.condition condition[0]).to eq(condition[1])
         end
       end
 
@@ -110,13 +108,12 @@ RSpec.describe Marketplace::Craigslist do
         conditions = {"MINT iPhone 5" => "mint",
           "Mint Condition" => 'mint',
           "MINT Condition" => 'mint',
+          "just phone in mint condition" => 'mint',
           " - Mint " => 'mint'
         }
 
         conditions.each do |condition|
-          attrs = {title: condition[0]}
-          item = OpenStruct.new attrs
-          expect(Marketplace::Craigslist.condition item).to eq(condition[1])
+          expect(Marketplace::Craigslist.condition condition[0]).to eq(condition[1])
         end
       end
 
@@ -124,9 +121,7 @@ RSpec.describe Marketplace::Craigslist do
         conditions = {"New iPhone 5" => 'new'}
 
         conditions.each do |condition|
-          attrs = {title: condition[0]}
-          item = OpenStruct.new attrs
-          expect(Marketplace::Craigslist.condition item).to eq(condition[1])
+          expect(Marketplace::Craigslist.condition condition[0]).to eq(condition[1])
         end
       end
 
@@ -134,9 +129,7 @@ RSpec.describe Marketplace::Craigslist do
         conditions = {"*Like New*" => 'like new'}
 
         conditions.each do |condition|
-          attrs = {title: condition[0]}
-          item = OpenStruct.new attrs
-          expect(Marketplace::Craigslist.condition item).to eq(condition[1])
+          expect(Marketplace::Craigslist.condition condition[0]).to eq(condition[1])
         end
       end
 
@@ -146,9 +139,7 @@ RSpec.describe Marketplace::Craigslist do
         }
 
         conditions.each do |condition|
-          attrs = {title: condition[0]}
-          item = OpenStruct.new attrs
-          expect(Marketplace::Craigslist.condition item).to eq(condition[1])
+          expect(Marketplace::Craigslist.condition condition[0]).to eq(condition[1])
         end      
       end
 
@@ -156,21 +147,15 @@ RSpec.describe Marketplace::Craigslist do
         conditions = { "Great Condition" => 'great'}
 
         conditions.each do |condition|
-          attrs = {title: condition[0]}
-          item = OpenStruct.new attrs
-          expect(Marketplace::Craigslist.condition item).to eq(condition[1])
+          expect(Marketplace::Craigslist.condition condition[0]).to eq(condition[1])
         end      
       end
 
       it 'should return nil given an item without title' do
-        attrs = {title: "MINTY FRESH"}
-        item = OpenStruct.new attrs
-        expect(Marketplace::Craigslist.condition item).to eq(nil)
+        expect(Marketplace::Craigslist.condition '').to eq(nil)
       end
     end
 
-    context 'body' do
-    end
   end
 
   describe '#color' do
@@ -208,33 +193,18 @@ RSpec.describe Marketplace::Craigslist do
   describe '#carrier' do
     carriers = {"sprint" => "sprint",
      "at&t" => "att",
+     'AT&amp;T' => "att",
      "verizon" => "verizon",
      "t-mobile" => "tmobile" }
 
-    context 'title' do
-      carriers.each do |carrier|
-        it "should return #{carrier[1]} when carrier is in title" do
-          attrs = {title: " #{carrier[0].capitalize} "}
-          item = OpenStruct.new attrs
-          expect(Marketplace::Craigslist.carrier item).to eq(carrier[1])
-        end
-      end
-    end
-
-    context 'description' do
-      carriers.each do |carrier|
-        it "should return #{carrier[1]} when carrier is in descriptioon" do
-          attrs = {description: " #{carrier[0].capitalize} "}
-          item = OpenStruct.new attrs
-          expect(Marketplace::Craigslist.carrier item).to eq(carrier[1])
-        end
+    carriers.each do |carrier|
+      it "should return #{carrier[1]} when carrier is in descriptioon" do
+        expect(Marketplace::Craigslist.carrier " #{carrier[0].capitalize} ").to eq(carrier[1])
       end
     end
 
     it "should return nil otherwise" do
-      attrs = {description: " LOCK "}
-      item = OpenStruct.new attrs
-      expect(Marketplace::Craigslist.carrier item).to eq(nil)
+      expect(Marketplace::Craigslist.carrier " LOCK ").to eq(nil)
     end
 
   end
@@ -306,6 +276,6 @@ RSpec.describe Marketplace::Craigslist do
       attrs = {description: " LOCK "}
       item = OpenStruct.new attrs
       expect(Marketplace::Craigslist.capacity item).to eq(nil)
-    end    
+    end
   end
 end
