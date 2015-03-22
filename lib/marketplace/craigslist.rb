@@ -12,9 +12,11 @@ class Marketplace::Craigslist
 
   def populate_listings
     @rss.items.each do |listing|
-      listing_price = Marketplace::Craigslist.listing_price(listing)      
-      
+      listing_price = Marketplace::Craigslist.listing_price(listing)            
       next if listing_price > 1000
+
+      model = Marketplace::Craigslist.model(listing.title)
+      next unless model
 
       transaction_price = Marketplace::Craigslist.transaction_price(listing)
       list_time = Marketplace::Craigslist.list_time(listing)
@@ -23,8 +25,7 @@ class Marketplace::Craigslist
       title = Marketplace::Craigslist.title(listing)
       condition = Marketplace::Craigslist.condition(listing.title) || Marketplace::Craigslist.condition(listing.description)
 
-      brand = Marketplace::Craigslist.brand(listing)
-      model = Marketplace::Craigslist.model(listing)
+      brand = Marketplace::Craigslist.brand(listing)      
       capacity = Marketplace::Craigslist.capacity(listing)
       color = Marketplace::Craigslist.color(listing)
 
@@ -34,6 +35,9 @@ class Marketplace::Craigslist
       
       city = Marketplace::Craigslist.city(listing.link)
       neighborhood = Marketplace::Craigslist.neighborhood(listing.link)
+
+      scratches = Marketplace::Craigslist.scratches(listing.description)
+      cracked_screen = Marketplace::Craigslist.cracked_screen(listing.description)
 
       Listing.create(
         listing_price: listing_price,
@@ -50,6 +54,9 @@ class Marketplace::Craigslist
         carrier: carrier, 
         specs: specs, 
         unlocked: unlocked,
+        scratches: scratches,
+        cracked_screen: cracked_screen,
+        cash: cash,
         city: city,
         neighborhood: neighborhood,
         source: 'craigslist'
@@ -93,8 +100,18 @@ class Marketplace::Craigslist
       listing.title
     end
 
+    def cash phrase
+      !!phrase.match(/cash/i)
+    end
+
     def cracked_screen phrase
-      phrase.match(/cracked screen/i)
+      return false if phrase.match(/no crack/i)
+      return true if phrase.match(/crack/i)
+    end
+
+    def scratches phrase
+      return false if phrase.match(/no scratches/i)
+      return true if phrase.match(/scratches/i)
     end
 
     def condition phrase
@@ -160,8 +177,9 @@ class Marketplace::Craigslist
       end
     end
 
-    def model listing
-      models = {"iphone5s" => "iphone5s",
+    def model title
+      models = {"iphone4s" => "iphone4s",
+        "iphone5s" => "iphone5s",
         "iphone5c" => "iphone5c",
         'iphone6\+' => "iphone6plus",
         "iphone6plus" => "iphone6plus",
@@ -169,20 +187,10 @@ class Marketplace::Craigslist
         "iphone5" => "iphone5"
       }
 
-      if listing.title
-        title = listing.title.gsub(/ |\(|\)/,'').downcase
-        
-        models.each do |m|
-          return m[1] if title.match(m[0])
-        end
-      end
-
-      if listing.description
-        description = listing.description.gsub(/ |\(|\)/,'').downcase
-        
-        models.each do |m|
-          return m[1] if description.match(m[0])
-        end
+      title = title.gsub(/ |\(|\)/,'').downcase
+      
+      models.each do |m|
+        return m[1] if title.match(m[0])
       end
 
       nil

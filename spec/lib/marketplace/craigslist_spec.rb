@@ -229,8 +229,40 @@ RSpec.describe Marketplace::Craigslist do
     end
   end
 
+  describe '#cash' do
+    it 'should return true if cash is mentioned' do
+      expect(Marketplace::Craigslist.cash 'Cash').to eq(true)
+    end
+
+    it 'should retun false if cash isnt mentioned' do
+      expect(Marketplace::Craigslist.cash '').to eq(false)
+    end    
+  end
+
+  describe '#scratches' do
+    it 'should retunr true if scratch is mentioned' do
+      expect(Marketplace::Craigslist.scratches 'small SCRATCHES on back').to eq(true)
+    end
+
+    it 'should retunr false if no scratch is mentioned' do
+      expect(Marketplace::Craigslist.scratches 'NO SCRATCHES').to eq(false)
+    end
+  end
+
+  describe '#cracked_screens' do
+    it 'should return true if cracked screen is mentioned' do
+      expect(Marketplace::Craigslist.cracked_screen 'cracked screen').to eq(true)
+      expect(Marketplace::Craigslist.cracked_screen 'small crack').to eq(true)
+    end
+
+    it 'should retunr false if no cracks is mentioned' do
+      expect(Marketplace::Craigslist.cracked_screen 'no cracks').to eq(false)
+    end
+  end
+
   describe '#model' do
-    models = {"iPhone 5" => "iphone5",
+    models = {"iPhone 4s" => "iphone4s",
+      "iPhone 5" => "iphone5",
       "iPhone 5S" => "iphone5s",
       "iPhone 5 S" => "iphone5s",
       "iPhone 5C" => "iphone5c",
@@ -244,16 +276,12 @@ RSpec.describe Marketplace::Craigslist do
     
     models.each do |model|
       it "should return #{model[1]} when #{model[0]} is in title" do
-        attrs = {title: " #{model[0].capitalize} "}
-        item = OpenStruct.new attrs
-        expect(Marketplace::Craigslist.model item).to eq(model[1])
+        expect(Marketplace::Craigslist.model " #{model[0].capitalize} ").to eq(model[1])
       end      
     end
 
     it "should return nil otherwise" do
-      attrs = {description: " LOCK "}
-      item = OpenStruct.new attrs
-      expect(Marketplace::Craigslist.model item).to eq(nil)
+      expect(Marketplace::Craigslist.model " LOCK ").to eq(nil)
     end    
   end
 

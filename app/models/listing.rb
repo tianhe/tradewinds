@@ -1,15 +1,20 @@
 class Listing
   include Mongoid::Document
   
-  field :listing_price, type: Float, default: 0
-  field :transaction_price, type: Float, default: 0
+  field :title, type: String
+  field :description, type: String
   field :list_time, type: Date
   field :url, type: String
-  field :condition, type: String
-  field :description, type: String
-  field :title, type: String
   field :city, type: String
   field :neighborhood, type: String
+
+  field :listing_price, type: Float, default: 0
+  field :transaction_price, type: Float, default: 0
+
+  field :condition, type: String
+  field :cracked_screen, type: Boolean
+  field :scratches, type: Boolean
+  field :cash, type: Boolean
   field :verified, type: Boolean, default: false
 
   # belongs_to :product
