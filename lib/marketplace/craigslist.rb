@@ -13,7 +13,7 @@ class Marketplace::Craigslist
   def populate_listings
     @rss.items.each do |listing|
       listing_price = Marketplace::Craigslist.listing_price(listing)            
-      next if listing_price > 1000
+      next if listing_price.to_i > 1000
 
       model = Marketplace::Craigslist.model(listing.title)
       next unless model
