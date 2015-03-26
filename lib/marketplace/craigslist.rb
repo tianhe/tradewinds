@@ -32,6 +32,7 @@ class Marketplace::Craigslist
       carrier = Marketplace::Craigslist.carrier(listing.title) || Marketplace::Craigslist.carrier(listing.description)
       unlocked = Marketplace::Craigslist.unlocked(listing)
       specs = Marketplace::Craigslist.specs(listing)
+      cash = Marketplace::Craigslist.cash(listing.description)
       
       city = Marketplace::Craigslist.city(listing.link)
       neighborhood = Marketplace::Craigslist.neighborhood(listing.link)
